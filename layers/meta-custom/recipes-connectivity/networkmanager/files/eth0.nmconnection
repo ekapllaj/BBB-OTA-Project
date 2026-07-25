@@ -1,0 +1,20 @@
+# files/eth0.nmconnection
+[connection]
+id=eth0
+uuid=d5f245fc-dd44-4758-8cf5-a53197529288
+type=ethernet
+interface-name=eth0
+timestamp=1784746683
+
+[ethernet]
+mac-address=EC:11:27:FA:46:5A
+
+[ipv4]
+dns=8.8.8.8;8.8.4.4;
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=ignore
+
+[proxy]

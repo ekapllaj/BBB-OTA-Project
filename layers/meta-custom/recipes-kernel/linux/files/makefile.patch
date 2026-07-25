@@ -1,0 +1,35 @@
+Upstream-Status: Pending
+
+diff --git a/Makefile b/Makefile
+index cd4ae6a..d621bbd 100755
+--- a/Makefile
++++ b/Makefile
+@@ -1302,7 +1302,7 @@ ifeq (y, $(filter y, $(CONFIG_PLATFORM_I386_PC) $(CONFIG_PLATFORM_ARM_NV_NANO) $
+ ccflags-y += -DCONFIG_LITTLE_ENDIAN
+ ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+ 
+-ARCH := $(shell uname -m | sed -e s/i.86/i386/)
++ARCH ?= $(shell uname -m | sed -e s/i.86/i386/)
+ ifneq ($(CONFIG_PLATFORM_I386_PC), y)
+ 	_WARNING := $(warning ARM_RPI or ARM_NV_NANO requested. Must disable -Werror.)
+ 	ccflags-y += -Wno-error
+@@ -1323,7 +1323,7 @@ ifeq ($(KBASE),)
+ 	STAGINGMODDIR = $(KBASE)/kernel/drivers/staging
+ else
+ 	KSRC = $(KBASE)
+-	MODDESTDIR = $(KBASE)/drivers/net/wireless/
++	MODDESTDIR ?= $(KBASE)/drivers/net/wireless/
+ 	STAGINGMODDIR = $(KBASE)/drivers/staging
+ endif
+ INSTALL_PREFIX :=
+@@ -2398,8 +2398,9 @@ strip:
+ 	$(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded
+ 
+ install:
++	@echo "installing $(MODULE_NAME).ko driver on $(MODDESTDIR)"
+ 	install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
+-	/sbin/depmod -a ${KVER}
++	#/sbin/depmod -a ${KVER}
+ 
+ uninstall:
+ 	rm -f $(MODDESTDIR)/$(MODULE_NAME).ko

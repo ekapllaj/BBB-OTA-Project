@@ -1,0 +1,12 @@
+[Unit]
+Description=Initialize Mender Persistent Directories on /data
+Requires=data.mount
+After=data.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mender-persist-init.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

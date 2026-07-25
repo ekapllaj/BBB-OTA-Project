@@ -1,0 +1,37 @@
+SUMMARY = "Build an external Linux kernel module for Netgear AC1200 Wifi adapter"
+LICENSE = "GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+
+# Handles kernel environments, compiler mappings, and tracking setups
+inherit module
+
+PR = "r0"
+
+BRANCH = "5.8.7.1_35809.20191129_COEX20191120-7777"
+SRC_URI = " \
+    git://github.com/cilynx/rtl88x2bu.git;protocol=https;branch=${BRANCH} \
+    file://makefile.patch \
+    file://test.patch \
+"
+SRCREV = "c3192d7153de4b324fd662bb9db3ce775879f5e5"
+
+# Automatically load the driver on target boot
+KERNEL_MODULE_AUTOLOAD += "88x2bu"
+
+# Environment mapping for the rtl88x2bu Makefile
+export KSRC = "${STAGING_KERNEL_BUILDDIR}"
+export KBASE = "${STAGING_KERNEL_BUILDDIR}"
+export KVER = "${KERNEL_VERSION}"
+export MODDESTDIR = "${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless"
+
+# Standard manual installation since the custom Makefile lacks typical module targets
+do_install() {
+    install -d ${MODDESTDIR}
+    install -m 0644 ${S}/88x2bu.ko ${MODDESTDIR}/
+}
+
+# module.bbclass automatically handles FILES overrides for modules. 
+# Only use this if you deploy external config files like modprobe configuration options.
+# FILES:${PN} += "${sysconfdir}/modprobe.d"
+
+RPROVIDES:${PN} += "kernel-module-88x2bu-${KERNEL_VERSION}"
