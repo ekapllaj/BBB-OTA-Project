@@ -28,8 +28,5 @@ do_install() {
     install -m 0644 ${S}/88x2bu.ko ${MODDESTDIR}/
 }
 
-# module.bbclass automatically handles FILES overrides for modules. 
-# Only use this if you deploy external config files like modprobe configuration options.
-#FILES:${PN} += "/usr/lib"
-
-RPROVIDES:${PN} += "kernel-module-88x2bu-${KERNEL_VERSION}"
+ALLOW_EMPTY:${PN} = "1"
+RDEPENDS:${PN} += "kernel-module-88x2bu-${KERNEL_VERSION}"
